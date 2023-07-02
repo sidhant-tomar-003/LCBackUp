@@ -1,0 +1,33 @@
+-- Problem Name: "1. Two Sum"
+-- Difficulty: Easy
+-- Language: C++
+
+-- Logic/Explanation: 
+By using a hashmap we can store our list numbers and access them in O(1) time. Since we need to find a number that adds to another to give 
+the sum, we can just search for the difference between the sum and a number to check if such a pair exists. This entire operation takes O(1)
+time.
+
+Things to note: 
+Instead of storing the number, we store the index instead. We have to add 1 to all the indices stored as we use '0' as a "non existent" 
+condition for the hashmap.
+
+
+-- Code:
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> mp;
+        for (int i = 0; i < nums.size(); i++) {
+            
+            if (mp[target - nums[i]]) 
+                return {mp[target - nums[i]]-1, i};
+            
+            mp[nums[i]] = i+1;
+        }
+        
+        return {};
+    }
+};
+
+-- Runtime: 16ms
+-- Memory Usage: 11.4MB
