@@ -7,7 +7,6 @@ Given 2 strings, return true if you can transform the string "s" into the string
 temp = s[j];
 s[j] = s[i];
 s[i] = temp;
-
 where 0 <= i, j < length(s)
 
 
