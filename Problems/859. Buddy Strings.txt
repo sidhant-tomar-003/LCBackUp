@@ -1,0 +1,90 @@
+-- Problem Name: "859. Buddy Strings" (https://leetcode.com/problems/buddy-strings/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem Statement (Condensed):
+Given 2 strings, return true if you can transform the string "s" into the string "goal" with 1 and only 1 swaping operation, where a swapping operation is:
+
+temp = s[j];
+s[j] = s[i];
+s[i] = temp;
+
+where 0 <= i, j < length(s)
+
+
+-- Logic/Explanation: 
+There are several cases to take note of:
+1. An identical string:
+
+Here, we want to do a swap operation such that we get the same string as the result.
+However, if the string is comprised only of unique letters, then no swapping operation can result in the same string again.
+
+So for this case we simply return false if there are no letters with a count of 2 or more.
+
+2. A string with 1 difference (b/w s and goal)
+In this case, we cannot obtain goal through our swap operation because the swap operation will change 2 indices.
+
+So we return false.
+
+3. A string with 2 differences 
+
+In this case, we can indeed obtain the goal string since there are 2 differences. 
+However, if the string obtained after swapping the positions of difference in "s" does not yield the "goal" string, then
+we still return false. So:
+
+	> If string after swap != goal, return false
+	> else if they match, return true
+
+4. A string with 3 or more differences
+
+In this case, we cannot ever make the strings equal with only 1 swapping operation. Hence, we return false.
+
+Things to note: 
+A difference in this context is 1 index not being the same in a given pair of strings.
+
+
+-- Code:
+/*
+This code has comments referring to an explanation in https://github.com/Sid-the-Slothh/LCBackUp/
+*/
+class Solution {
+public:
+    bool buddyStrings(string s, string goal) {
+        if (s.size() != goal.size())	
+            return false;
+        // If word is the same, check for repeat letters
+        if (s == goal) {				//Case 1 is resolved in this if statement
+            int occ[26] = {0};
+            for (auto i: s) {
+                occ[i - 'a']++;
+                if (occ[i - 'a'] == 2)
+                    return true;
+            }
+            //all unique letters means that no swapping will yield the same word again, so return false
+            return false;
+        }
+        
+        // If word is not the same, check up till 2 difference. Return false on 3 or more differences,  
+        // Then check if the 2 letters are the same when swapped (s1 == s2 or nay)
+        int ind1 = -1, ind2 = -1;
+        for (int i = 0; i < s.size(); i++) {		//Case 3 is resolved in the next few lines of code
+            if (s[i] != goal[i]){
+                if (ind1 == -1)
+                    ind1 = i;
+                
+                else if (ind2 == -1)
+                    ind2 = i;
+                
+                else					//Case 4 is resolved here
+                    return false;
+            }
+        }
+        if (ind1 == -1 || ind2 == -1)			//Case 2 is resolved here
+            return false;
+        
+        return (s[ind1] == goal[ind2] && s[ind2] == goal[ind1]);	//Case 3 is fully resolved here and ends the program
+    }
+};
+
+
+-- Runtime: 6ms
+-- Memory Usage: 6.9MB

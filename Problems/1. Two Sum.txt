@@ -1,6 +1,11 @@
--- Problem Name: "1. Two Sum"
+-- Problem Name: "1. Two Sum" (https://leetcode.com/problems/two-sum/)
 -- Difficulty: Easy
 -- Language: C++
+-- Problem statement (condensed):
+Find the pair of numbers in an array that add up to some given integer "target". 
+
+The test cases are made such that such a pair always exists.
+
 
 -- Logic/Explanation: 
 By using a hashmap we can store our list numbers and access them in O(1) time. Since we need to find a number that adds to another to give 
@@ -28,6 +33,7 @@ public:
         return {};
     }
 };
+
 
 -- Runtime: 16ms
 -- Memory Usage: 11.4MB
