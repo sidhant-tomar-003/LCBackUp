@@ -1,0 +1,47 @@
+-- Problem Name: "766. Toeplitz matrix" (https://leetcode.com/problems/Toeplitz-matrix/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Check every diagonal for whether it is comprised of the same elements or not.
+
+
+-- Logic/Explanation: 
+We can just iterate over the diagonals. We just need to ensure that we don't go out of bounds of the
+matrix.
+
+
+-- Code:
+class Solution {
+public:
+    bool isToeplitzMatrix(vector<vector<int>>& mat) {
+        int i = 0, j = 0, m = mat[0].size(), n = mat.size();
+        while (i != n) {
+            int ti = i, tj = j, prev = mat[i][j];
+            i++;                //scans from the left side of the matrix
+            while (ti != n && tj != m) {
+                if (prev != mat[ti][tj])
+                    return 0;
+                ti++; tj++;             //for diagonal scanning
+            }
+        }
+        i = 0;
+        j = 1;
+        while (j != m) {
+            int ti = i, tj = j, prev = mat[i][j];
+            j++;                //scans from the left side of the matrix
+            while (ti != n && tj != m) {
+                if (prev != mat[ti][tj])
+                    return 0;
+                ti++; tj++;             //for diagonal scanning
+            }
+        }
+        return 1;
+    }
+};
+
+
+-- Runtime: 
+-- Memory Usage: 
+
+
+
