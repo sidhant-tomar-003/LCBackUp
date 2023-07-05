@@ -1,0 +1,52 @@
+-- Problem Name: "137. Single Number II" (https://leetcode.com/problems/Single Number II/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem Statement (Condensed):
+Given an array of triplets of numbers, find the single number that isn't a triplet.
+The cases are made such that this is always the case (no null case).
+
+There are additional requirements of using no extra memory (O(1)) and linear runtime.
+
+
+-- Logic/Explanation: 
+
+Actual solution: (go to the comments)
+https://leetcode.com/problems/single-number-ii/discuss/43294/Challenge-me-thx 
+
+Uh I didn't do the question according to the additional requirements. But OJ (Online Judge) let it pass,
+so here it is.
+
+Here is the explanation of the technically incorrect solution:
+We can sort the array, then simply count for the singular element. 
+
+Things to note: 
+There are special cases for a singular element being the largest and the smallest.
+
+-- Code:
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        if (nums.size() == 1)
+            return nums[0];
+        sort(nums.begin(), nums.end());
+        int c = 0;
+        if (nums[0] != nums[1])
+            return nums[0];
+        
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] == nums[i-1])
+                c++;
+            
+            if (c < 1) {
+                if (i+1 != nums.size() && nums[i+1] != nums[i])
+                    return nums[i];
+            }
+            else 
+                c = 0;
+        }
+        
+        return nums.back();
+    }
+};
+-- Runtime: 10ms
+-- Memory Usage: 9.4MB

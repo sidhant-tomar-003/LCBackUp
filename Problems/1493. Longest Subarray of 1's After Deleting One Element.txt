@@ -1,4 +1,4 @@
--- Problem Name: "1493. Longest Subarray of 1's After Deleting One Element" (https://leetcode.com/problems/1493. Longest Subarray of 1's After Deleting One Element/)
+-- Problem Name: "1493. Longest Subarray of 1's After Deleting One Element" (https://leetcode.com/problems/Longest Subarray of 1's After Deleting One Element/)
 -- Difficulty: Medium
 -- Language: C++
 -- Problem Statement (Condensed):
