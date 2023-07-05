@@ -1,0 +1,54 @@
+-- Problem Name: "1493. Longest Subarray of 1's After Deleting One Element" (https://leetcode.com/problems/1493. Longest Subarray of 1's After Deleting One Element/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem Statement (Condensed):
+Given a binary array, return the size of the largest subarray that only contains a single "0".
+
+
+-- Logic/Explanation: 
+This question is very simple if you know the concept of a sliding window. If you don't, then refer to this link 
+(https://stackoverflow.com/questions/8269916/what-is-sliding-window-algorithm-examples).
+
+So the trick is to create a sliding window that slides up the left side when it encounters a second "0" on the right side.
+
+We then run the sliding window for the entire array and return the size of the longest subbarray.
+
+
+Things to note: 
+Note that the variable with the current longest length must be checked every time before the left side of the window is moved.
+This little facet to the question makes it a beginner Dynamic Programming problem.
+
+
+-- Code:
+/*
+This code has comments referring to an explanation in https://github.com/Sid-the-Slothh/LCBackUp/
+*/
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        int l = 0, r = 0, f = 0, res = 0;		// f stores if a 0 has been encountered or not yet for the window
+        while (r < nums.size()) {	
+            // cout << r << ' ' << l << endl;
+            if (!nums[r] && f) {			// if a 0 is found for the second time,  then change up the window
+                res = max(res, r - l - 1);		// Update the return value while retaining max.
+                while (nums[l] && l < r) {
+                    l++;
+                }
+                l++;
+                f = 0;
+            }
+            
+            if (!nums[r])				// if a 0 is found, activate the flag
+                f++;
+            
+            r++;				
+        }
+        
+        res = max(res, r - l - 1);
+        
+        return res;
+    }
+};
+
+-- Runtime: 44ms
+-- Memory Usage: 36.6MB
