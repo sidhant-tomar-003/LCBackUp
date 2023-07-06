@@ -1,0 +1,58 @@
+-- Problem Name: "209. Minimum Size Subarray Sum" (https://leetcode.com/problems/minimum-size-subarray-sum/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given an array of numbers, find the size of the smallest subarray that is greater than or equal to a provided
+target integer. 
+
+-- Logic/Explanation: 
+This question is very simple if you know the concept of a sliding window. If you don't, then refer to this link 
+(https://stackoverflow.com/questions/8269916/what-is-sliding-window-algorithm-examples).
+
+The criterion for moving the window in this question is to maintain a "sum" variable that is less than the 
+target number. This makes the following cases:
+
+1. sum is less than target:
+Then we can simply increase the window size, so:
+> sum += nums[r]
+> r += 1
+
+2. sum is greater than target:
+Then we need to first update the minimum window (subarray) size. After that, we will move up the left side of
+the window up until the sum size is less than the target size. So:
+> loop until sum < target: 
+	> sum -= nums[l]
+	> l += 1
+
+Things to note: 
+It is possible that the left side of the window just excluded an optimal answer (this is likely a quirk of my 
+specific implementation), so I added an additional if check to ensure that the optimal answer is captured.
+
+-- Code:
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int sum = 0, res = 10e6, r = 0, l = 0;
+        
+        while (r < nums.size()) {
+            sum += nums[r];				// Adding to sum before to avoid a post loop if
+            r++;
+            
+            if (sum >= target) {
+                res = min(res, r - l);
+                while (sum >= target) {
+                    sum -= nums[l];
+                    l++;
+                }  
+                if (l > 0 && sum + nums[l-1] >= target)
+                    res = min(res, r - l);
+            }
+        }
+        
+        return res == 10e6 ? 0 : res+1;
+    }
+};
+
+
+-- Runtime: 41ms
+-- Memory Usage: 28.2MB
