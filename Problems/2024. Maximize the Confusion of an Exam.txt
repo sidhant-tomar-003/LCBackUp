@@ -1,0 +1,106 @@
+-- Problem Name: "2024. Maximize the Confusion of an Exam" (https://leetcode.com/problems/maximize-the-confusion-of-an-exam/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+(Cutting through the narrative fluff) Given a string "s" composed of "T"s and "F"s, find the largest substring 
+in the string that is the same (i.e continous Ts or Fs), given "k" flips. 
+
+A flip is turning a "T" into an "F", or vice versa. 
+
+-- Logic/Explanation: 
+This question is very simple if you know the concept of a sliding window. If you don't, then refer to this link 
+(https://stackoverflow.com/questions/8269916/what-is-sliding-window-algorithm-examples).
+
+For this problem, we will run the sliding window twice; once for Ts and once for Fs.
+
+The criterion for moving the window in this question is to maintain a "count" variable that is incremented when
+we make a flip, i.e encounter a letter that is different. This makes the following cases:
+
+1. count is less than "k", letter is the same as our target letter:
+Then we can simply increase the window size, so:
+> r += 1
+
+2. count is less than "k", letter is not the same as our target letter:
+In this case, we will need to "use up" a flip. So that means we increment the counter to denote that we have 
+used a flip, then we can continue on the same as case 1.
+> c += 1
+> r += 1
+
+3. count is equal to "k", letter is not the same as our target letter:
+In this case, we need to reduce the size of our window to regain a "flip" operation. We do this by using the 
+following loop:
+> while (s[l] != <opposite letter>
+	> l += 1
+
+Then we do an additional increment because the loop only stops at the letter we need to exclude to get a flip:
+> l += 1
+
+Then we need to decrement the counter to "Regain" a flip operation.
+> c -= 1
+
+
+Things to note: 
+The chronology of the updation of our return value is sensitive; we might get an incorrect answer if it is done
+before the condition of the window is resolved by our if statements. As a rule of thumb, it is best to update 
+the return value after the if conditions. 
+
+Note: A slightly simpler way of doing this is to have 2 separate counters for "T" and "F", and have an if 
+condition that checks the min of the 2 counters.
+
+
+-- Code:
+class Solution {
+public:
+    int maxConsecutiveAnswers(string s, int k) {
+        // Maximize T, then F
+        // Return the max of the two
+        // Use sliding window with a flips counter
+        int res = 0, c = 0, r = 0, l = 0;
+        const char F = 'F', T = 'T';
+        // Resolving for max T
+        while (r < s.size()) {
+            if (s[r] == F && c == k) {		// Case 3
+                // Move left up
+                while (s[l] != F) {
+                    l++;
+                }
+                l++;
+                c--;
+                res = max(res, r - l + 1);
+            }
+            
+            if (s[r] == F && c < k) {		// Case 2
+                c++;
+            }
+            res = max(res, r - l + 1); 		// Case 1
+            r++;
+        }
+        
+        //resolving for max F
+        c = 0, r = 0, l = 0;
+        while (r < s.size()) {
+            if (s[r] == T && c == k) {		// Case 3
+                // Move left up
+                while (s[l] != T) {
+                    l++;
+                }
+                l++;
+                c--;
+                res = max(res, r - l + 1);
+            }
+            
+            if (s[r] == T && c < k) {		// Case 2
+                c++;
+            }
+            res = max(res, r - l + 1);		// Case 1
+            r++;
+        }
+        
+        
+        return res;
+    }         
+};
+
+
+-- Runtime: 29ms
+-- Memory Usage: 10MB
