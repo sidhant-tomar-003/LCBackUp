@@ -1,0 +1,22 @@
+-- Problem Name: "9. Palindrome Number" (https://leetcode.com/problems/Palindrome Number/)
+-- Difficulty: Easy
+-- Language: Python
+-- Problem statement (condensed):
+Check if an int limit number is palindrome or not. Note that negative numbers cannot be palindrome:
+-121, 121-
+
+
+-- Logic/Explanation: 
+Just reverse the number in python and check.
+
+Things to note: 
+
+
+-- Code:
+class Solution:
+    def isPalindrome(self, x: int) -> bool:
+        return str(x) == str(x)[::-1]
+
+
+-- Runtime: 77ms
+-- Memory Usage: 16.4MB
