@@ -1,0 +1,46 @@
+-- Problem Name: "14. Longest Common Prefix" (https://leetcode.com/problems/Longest Common Prefix/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given an array of strings, return the common prefix amongst all of the strings.
+
+
+-- Logic/Explanation: 
+Simply have a pointer "i" that keeps track of the common letters. Once any string has a mismatch, just 
+return the common string made so far.
+
+Things to note: 
+
+
+-- Code:
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        for (auto j: strs) {
+            if (!j.size())
+                return "";
+        }
+        if (strs.size() == 1)
+            return strs[0];
+
+        int f = 1, i = 0;
+        while (f) {
+            for (int j = 1; j < strs.size(); j++) {
+                if (i == strs[j].size()) {
+                    f = 0;
+                    break;
+                }
+                if (strs[j][i] != strs[j-1][i]) 
+                    f = 0;
+            }
+            if (!f)
+                break;
+            i++;
+        }
+        return strs[0].substr(0, i);
+    }
+};
+
+
+-- Runtime: 3ms
+-- Memory Usage: 9.2MB
