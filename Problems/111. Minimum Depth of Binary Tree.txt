@@ -1,0 +1,45 @@
+-- Problem Name: "111. Minimum Depth of Binary Tree" (https://leetcode.com/problems/minimum-depth-of-binary-tree/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given a binary tree, find the leaf node that is the "shallowest", i.e is closest to the root. 
+
+
+-- Logic/Explanation: 
+You can run a bfs and simply scan for a leaf node. The first leaf node you encounter will consequentially
+be the shallowest leaf node.
+
+Things to note: 
+Nada
+
+-- Code:
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if (!root)
+            return 0;
+        int res = 1;
+        queue<TreeNode *> q;
+        q.push(root);
+        while (q.size()) {
+            int n = q.size();
+            for (int i = 0; i < n; i++) { 
+                auto curr = q.front();
+                q.pop();
+                if (!curr->left && !curr->right) 
+                    return res;
+
+                if (curr->left)
+                    q.push(curr->left);
+                if (curr->right)
+                    q.push(curr->right);
+            }
+            res++;
+        }
+        return -1;
+    }
+};
+
+
+-- Runtime: 286 ms
+-- Memory Usage: 144.5MB
