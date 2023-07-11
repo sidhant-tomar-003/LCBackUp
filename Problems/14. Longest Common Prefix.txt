@@ -1,4 +1,4 @@
--- Problem Name: "14. Longest Common Prefix" (https://leetcode.com/problems/Longest Common Prefix/)
+-- Problem Name: "14. Longest Common Prefix" (https://leetcode.com/problems/Longest-Common-Prefix/)
 -- Difficulty: Easy
 -- Language: C++
 -- Problem statement (condensed):

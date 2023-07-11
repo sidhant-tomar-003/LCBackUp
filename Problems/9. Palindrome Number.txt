@@ -1,4 +1,4 @@
--- Problem Name: "9. Palindrome Number" (https://leetcode.com/problems/Palindrome Number/)
+-- Problem Name: "9. Palindrome Number" (https://leetcode.com/problems/Palindrome-Number/)
 -- Difficulty: Easy
 -- Language: Python
 -- Problem statement (condensed):

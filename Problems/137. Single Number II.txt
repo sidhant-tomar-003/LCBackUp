@@ -1,4 +1,4 @@
--- Problem Name: "137. Single Number II" (https://leetcode.com/problems/Single Number II/)
+-- Problem Name: "137. Single Number II" (https://leetcode.com/problems/Single-Number-II/)
 -- Difficulty: Medium
 -- Language: C++
 -- Problem Statement (Condensed):
