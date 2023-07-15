@@ -1,0 +1,38 @@
+-- Problem Name: "338. Counting Bits" (https://leetcode.com/problems/counting-bits/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given a number "n", make an array that describes the numbers of bits of the number of its index, given that 
+the size of the array is "n+1" (0-n).
+
+-- Logic/Explanation: 
+We simply iterate over the numbers between 0 and n, and count the bits by left shifting the number and 
+finding a "1" in the last digit. This count is then appended to the answer array and is returned. 
+
+
+Things to note: 
+
+-- Time Complexity: O(nLog(n))
+-- Code:
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        int curr = 0;
+        vector<int> res = {0};
+        for (int i = 1; i <= n; i++) {
+            int c = 0, temp = i;
+            while (temp) {
+                if (temp % 2)
+                    c++;
+                temp = temp >> 1;
+            }
+            res.push_back(c);
+        }
+        
+        return res;
+    }
+};
+
+
+-- Runtime: 0ms
+-- Memory Usage: 6.4MB

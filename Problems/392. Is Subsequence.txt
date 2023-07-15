@@ -1,0 +1,33 @@
+-- Problem Name: "392. Is Subsequence" (https://leetcode.com/problems/is-subsequence/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given a string "s" and a string "text". Return true if s is a subsequence of text.
+
+-- Logic/Explanation: 
+We use 2 pointers, 1 pointing to s called "p2" and 1 to text called "p1". Then we increment p1 throughout 
+the entirety of text string and increment the pointer p2 if text[p1] matches s[p2]. 
+
+Then, if the final value of p2 is equal to the size of "s", then that means s was indeed a subsequence of 
+text.
+
+Things to note: 
+
+-- Time complexity: O(n)
+-- Code:
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int p2 = 0;
+        for (int p1 = 0; p1 < t.size(); p1++) {
+            if (t[p1] == s[p2])
+                p2++;
+        }
+        
+        return p2 == s.size() ? true : false;
+    }
+};
+
+
+-- Runtime: 0ms
+-- Memory Usage: 6.4MB

@@ -1,0 +1,47 @@
+-- Problem Name: "119. Pascal's Triangle II" (https://leetcode.com/problems/pascals-triangle-ii/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given an index "i", return the "ith" row of pascal's triangle. 
+
+-- Logic/Explanation: 
+We take some pre-calculated rows {1,1} and {1} for the initial cases of 0, 1 rows. 
+For the rest of the cases, we make a temp array where we run the operation:
+
+new_element = up_row[i-1] + up_row[i], i is in [1, up_row.size()-1]
+Then we stuff a 1 at the front and back of the array, and take that as the current
+array. 
+
+The operation above operation under a loop until the current row is reached. 
+
+
+Things to note: 
+
+-- Time complexity: O(n)
+-- Code: 
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        if (rowIndex == 0)
+            return {1};
+        
+        vector<int> res = {1, 1}; 
+        for (int i = 1; i < rowIndex; i++) {
+            vector<int> temp;
+            temp.push_back(1);
+            for (int i = 1; i < res.size(); i++) {
+                temp.push_back(res[i-1] + res[i]);
+            }
+            temp.push_back(1);
+            res = temp;
+        }
+        return res;
+    }
+};
+
+
+-- Code:
+https://leetcode.com/problems/pascals-triangle-ii/
+
+-- Runtime: 0ms
+-- Memory Usage: 6.5MB
