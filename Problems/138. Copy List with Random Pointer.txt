@@ -1,0 +1,52 @@
+-- Problem Name: "138. Copy List with Random Pointer" (https://leetcode.com/problems/copy-list-with-random-pointer/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a singly linked list with a "random pointer" which points to any node or null, reconstruct the list by doing a 
+deep copy. i.e all the memory for all the nodes must be different, but the contents should match.
+
+-- Logic/Explanation: 
+This problem is a simply one as long as you understand the order of operations required. We cannot simply make a copy
+as when we make a new node, we don't have any other nodes to point its links to. Hence, we can simply do this in 2 steps:
+
+1. Construct all the nodes and keep track of them using any means (I used a hash table)
+2. Create all the linkages in accordance to the original linked list.
+
+This can be done in many ways, but I did it using an unordered map. 
+
+Things to note: 
+You might have thought of using a vector to hash the nodes with their "vals", but that won't work since multiple nodes
+can have the same value.
+
+Fun fact: This took me 6 minutes to solve! Yeah I don't know why I'm saing it here haha.
+
+-- Time complexity: O(n) (2n) time, O(n) (2n) space, where the log base is 26.
+-- Code:
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (!head)
+            return nullptr;
+        
+        unordered_map<Node*, Node*> mp;
+        // First make the LL without random or next links
+        auto temp = head;
+        while (temp) {
+            mp[temp] = new Node(temp->val);
+            temp= temp->next;
+        }
+        
+        // Then fill in the random pointers once a new LL has been made
+        temp = head;
+        while (temp) {
+            mp[temp]->next = mp[temp->next];
+            mp[temp]->random = mp[temp->random];
+            temp = temp->next;
+        }
+        
+        return mp[head];
+    }
+};
+
+-- Runtime: 7ms
+-- Memory Usage: 11.4MB
