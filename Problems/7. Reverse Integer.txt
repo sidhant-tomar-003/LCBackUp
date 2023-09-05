@@ -1,0 +1,76 @@
+-- Problem Name: "1646. Get Maximum in Generated Array" (https://leetcode.com/problems/reverse-integer/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a number, return its reverse given that is within the range [-INT_MAX, INT_MAX - 1], otherwise return "0".
+An additional constraint is that no container larger than int can be used (including double and float).
+
+-- Logic/Explanation: 
+The solution to this problem would be trivial if we could use a long. Reverse the integer, then simply check for the 
+given range and return accordingly. But when we're at threat of overflow when reversing the integer, we then have to
+do the reversing step by step. 
+
+First, we take out all of the digits in the integer by successive modulo and divisions.
+Second, we reverse the list we have to obtain the list of digits, but reversed.
+Third, we check for any overflow conditions by comparing the digits to "INT_MAX". 
+
+Then, we simply return the reversed digits (after constructing the integer of course).
+
+
+Things to note: 
+Due to the negative range being higher than the positive range, I did the reversing of the integers in the negative.
+
+-- Time complexity: O(log(n)) time, O(log(n)) space
+-- Code:
+class Solution {
+public:
+    int reverse(int x) {
+        bool flg = 0;
+        if (x > 0) {
+            x *= -1;
+            flg = 1;
+        }
+        
+        int n = 0, temp = x;
+        vector<int> ds;
+        while (temp) {
+            ds.push_back(temp % 10);
+            temp /= 10;
+            n++;
+        }
+        n--;
+        
+//         for (auto i: ds)
+//             cout << i << ' ';
+        
+//         cout << endl;
+        
+        if (ds.size() == 10) {
+            int limit[] = {2,1,4,7,4,8,3,6,4,7};
+            for (int i = 0; i < 10; i++) {
+                if (-1 * ds[i] < limit[i])
+                    break;
+                
+                if (-1 * ds[i] > limit[i])
+                    return 0;
+            }
+        }
+        
+        ::reverse(ds.begin(), ds.end());
+        
+        int res = 0;
+        while (ds.size()) {
+            res += ds.back() * pow(10, n);
+            ds.pop_back();
+            n--;
+        }
+        
+        if (flg)
+            res *= -1;
+        
+        return res;
+    }
+};
+
+-- Runtime: 3ms
+-- Memory Usage: 6.4MB

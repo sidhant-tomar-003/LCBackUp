@@ -1,0 +1,36 @@
+-- Problem Name: "141. Linked List Cycle" (https://leetcode.com/problems/linked-list-cycle/submissions/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given a linked list which has had its final NULL pointer replaced with a pointer to its own node, find the node at which
+the cycle is formed.
+Note that an input without any cycle can be given.
+
+-- Logic/Explanation: 
+While the O(n) memory solution is trivial, the O(1) memory solution is based on Floyd's turtle and hare solution.
+We run 2 pointers, one that is "slow" and one that is "fast". The fast pointer goes forward 2 nodes at a time.
+The slow pointer goes forward 1 node at a time. Letting these 2 pointers run will end up with them coinciding on the
+node that the loop forms.
+
+Things to note: 
+Make sure to account for the acyclic case by checking if your linked list forward pointers are not null to avoid
+a segmentation fault.
+
+-- Time complexity: O(n) time, O(1) space
+-- Code:
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        ListNode* fast = head;
+        while (fast && fast->next && fast->next->next) {
+            fast = fast->next->next;
+            head = head->next;
+            if (fast == head)
+                return 1;   
+        }
+        return 0;
+    }
+};
+
+-- Runtime: 7ms
+-- Memory Usage: 8.1MB

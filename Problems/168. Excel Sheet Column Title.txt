@@ -1,0 +1,52 @@
+-- Problem Name: "168. Excel Sheet Column Title" (https://leetcode.com/problems/excel-sheet-column-title/)
+-- Difficulty: Easy
+-- Language: C++
+-- Problem statement (condensed):
+Given a number within the range of a signed int, return its form in "excel column numbering". The system goes
+something like this:
+A	1
+B	2
+.	.
+.	.
+Z	26
+AA	27
+.	.
+.	.
+...	...
+
+
+-- Logic/Explanation: 
+This problem is quite interesting, because even thought it just requires you to convert between 2 number systems,
+one of the number systems lacks a representation for "0". We don't see this as often anymore, because number systems
+with 0 are much easier to work with. But once you catch on to the quirks of the base 26-sans-zero number system, the
+problem is quite easy. When performing our normal conversions, simply decrement the number by 1 when the remainder
+of the division is equal to 0, and add an "Z" instead of a "A".
+
+Things to note: 
+There are other ways of going around this problem. This is the solution I stumbled upon.
+
+-- Time complexity: O(log(n)) time, O(log(n)) space, where the log base is 26.
+-- Code:
+class Solution {
+public:
+    string convertToTitle(int coln) {
+        string res;
+        bool f = 0;
+        while (coln > 0) {
+            if (coln % 26 == 0) {
+                res += "Z";
+                coln--;
+            }
+            else
+                res += char('A' + coln % 26 - 1);
+            coln /= 26;
+        }
+        
+            
+        reverse(res.begin(), res.end());
+        return res;
+    }
+};
+
+-- Runtime: 0ms
+-- Memory Usage: 6MB
