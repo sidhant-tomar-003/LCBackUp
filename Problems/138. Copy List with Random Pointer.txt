@@ -20,7 +20,7 @@ can have the same value.
 
 Fun fact: This took me 6 minutes to solve! Yeah I don't know why I'm saing it here haha.
 
--- Time complexity: O(n) (2n) time, O(n) (2n) space, where the log base is 26.
+-- Time complexity: O(n) (2n) time, O(n) (2n) space
 -- Code:
 class Solution {
 public:

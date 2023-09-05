@@ -1,0 +1,72 @@
+-- Problem Name: "133. Clone Graph" (https://leetcode.com/problems/clone-graph/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a graph, create its deep copy, a clone.
+
+-- Logic/Explanation: 
+This problem is similar to 138 in nature. All you have to do is obtain all the node pointers and store them in any way.
+Then you can construct the graph's connection from the original by simply comparing. In a step-wise fashion:
+
+1. Construct all the nodes and keep track of them using any means (I used a hash table)
+2. Create all the linkages in accordance to the original graph.
+
+
+Things to note: 
+This can be done in many ways, but I did it using an unordered map. 
+
+Another thing to note is that there are 2 edge cases. One is for an empty graph, and the
+other is for a single node graph.
+
+-- Time complexity: O(n) time, O(n) space
+-- Code:
+class Solution {
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node)
+            return nullptr;
+        
+        if (node->neighbors.size() == 0)
+            return new Node(1);
+        
+        
+        unordered_map<Node*, Node*> mp;
+        
+        // use bfs to fetch all nodes, and put them in a umap
+        queue<Node*> q;
+        q.push(node);
+        
+        while (q.size()) {
+            int n = q.size();
+            while (n--) {
+                for (auto nod: q.front()->neighbors) {
+                    if (!mp[nod]) {
+                        mp[nod] = nod;
+                        q.push(nod);
+                    }
+                }
+                q.pop();
+            }
+        }
+        
+        // for (auto i: mp)
+        //     cout << i.first->val << ' ';
+        
+        for (auto i: mp) 
+            mp[i.first] = new Node(i.first->val);
+        
+        
+        // then fill in all the connections using umap
+        for (auto i: mp) {
+            for (auto nod: i.first->neighbors) {
+                mp[i.first]->neighbors.push_back(mp[nod]);
+            }
+        }
+        
+        
+        return mp[node];
+    }
+};
+
+-- Runtime: 0ms	(beats 100!)
+-- Memory Usage: 8.5MB	(beats 99.4!)
