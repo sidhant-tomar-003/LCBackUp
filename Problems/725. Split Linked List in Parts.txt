@@ -1,0 +1,81 @@
+-- Problem Name: 725. Split Linked List in Parts" (https://leetcode.com/problems/split-linked-list-in-parts/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a linked list, split it into "k" equal parts. Distribute any remainder of n / k left to right.
+If n < k, push empty lists to the n - k remaining parts (nullptrs).
+
+-- Logic/Explanation: 
+This problem has a few ways of going around it. One simple method is to simply store every node in a vector sequentially, and 
+then segment the vector into "k" parts and construct the return vector from there. This solution is straightforward and 
+highly readable, but it makes an extra vector of nodes. We can do without that.
+
+So what I did was to first count the total number of nodes in the list. Then, I put the "head" pointer as the first element 
+of the return vector. Then, we traverse "n/k" nodes into the linked list, and then segment it into 2 lists: the first 
+"n/k" elements and the remaining "n - (n/k)" elements. Doing this until either the nodes run out will lead to a segmented linked 
+list.
+
+However, the approach above does not account for any remainder nodes. So, we can just add an "extra" counter that counts 
+how many segments need an extra node from left to right. And lastly we add some if constructs to handle the case of n < k, then 
+we obtain the correct result vector if we run the above steps in a loop for k-1.
+
+Eg:
+input: {1,2,3,4,5,6}, k = 3
+step by step:
+[{1,2,3,4,5,6}] ->  [{1,2,3},{4,5,6}]
+      ^
+     This is n/k, so we traverse to there in the first iteration of the loop cuts the list into: {1,2,3} and {4,5,6}.
+
+[{1,2,3},{5,4,6}] -> [{1,2,3},{5,4,6}]
+	      ^
+	    This is where the second loop will stop traversing at, and thus finish because it has finished processing
+		all the nodes.
+
+Things to note: 
+The approach I took is not necessarily faster than the more straightforward approach, especially if you just do segment
+the vector inplace.
+
+-- Time complexity: O(n) time, O(n) space
+-- Code:
+class Solution {
+public:
+    vector<ListNode*> splitListToParts(ListNode* head, int k) {
+        vector<ListNode*> res = {head};
+        auto temp = head;
+        int n = 0;
+        while (temp) {
+            n++;
+            temp = temp->next;
+        }
+        int extra = n > k ? n % k : 0;				//remainder counter
+        int total = 0;						//counter to check if all nodes have been processed
+        for (int i = 0; i < k-1; i++) {
+            if (total >= n) {					//if all nodes are processed, simply push nullptr
+                res.push_back(nullptr);
+                continue;
+            }
+            temp = res[i];
+            // cout << temp->val << ' ' << total << ' ';
+            auto back = res[i];
+            int cn = n / k ? n / k : 1;	
+            while (cn--) {                
+                back = temp;
+                temp = temp->next;
+                total++;
+            }
+            if (extra) {
+                extra--;
+                back = back->next;
+                temp = temp->next;
+                total++;
+            }
+            back->next = nullptr;
+            res.push_back(temp);
+        }
+        
+        return res;
+    }
+};
+
+-- Runtime: 3ms	
+-- Memory Usage: 8.8MB	
