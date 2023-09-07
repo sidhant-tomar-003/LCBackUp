@@ -1,0 +1,59 @@
+-- Problem Name: "328. Odd Even Linked List" (https://leetcode.com/problems/odd-even-linked-list/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a linked list, collect up all of the nodes at the even intervals from head, and add them to the back
+of the linked list. Do this in O(1) space.
+
+-- Logic/Explanation: 
+This problem, like most linked list problems, can be easily solved by putting everything in a vector. However, the
+problem statement requires us to solve this problem in O(1) space, so we need another approach. One intuitive approach
+is to make a second linked list composed of the elements we need to add to the original list at the back, and build it
+up from the original list's even nodes. That is exactly how we will solve this problem.
+
+We find all the "even" nodes by running a counter as we traverse the linked list and execute our "even node" code when
+the counter is even. Once we have an even node, all we need to do is to cut it out from the original list and put it 
+in the even nodes list. Then after traversing the entire list, we just append the even nodes at the end and return the
+original head.
+
+Things to note: 
+I initially mistook the even nodes as odd nodes, noticed, and then proceeded to never fix the nomenclature of the code.
+So assume "odd" and "oddh" as "even" and "evenh" (even head).
+-- Time complexity: O(n) time, O(1) space
+-- Code:
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (!head)
+            return nullptr;
+        
+        ListNode *temp = head;
+        ListNode* odds = nullptr, * oddsh = nullptr, *back = nullptr;
+        int counter = 1;
+        while (temp) {
+            if (counter % 2 == 0) {
+                back->next = temp->next;
+                if (!oddsh) {
+                    odds = temp;
+                    oddsh = odds;
+                }
+                else {
+                    odds->next = temp;
+                    odds = temp;
+                }
+                temp->next = nullptr;
+                temp = back->next;
+            }
+            else {
+                back = temp;
+                temp = temp->next;    
+            }
+            counter++;
+        }
+        back->next = oddsh;
+        
+        return head;
+    }
+};
+-- Runtime: 8ms	
+-- Memory Usage: 10.5MB	

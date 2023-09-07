@@ -1,0 +1,104 @@
+-- Problem Name: "61. Rotate List" (https://leetcode.com/problems/rotate-list/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a linked list, perform "k" rotations on it, where a rotation is:
+Eg:
+1 2 3 4 5
+5 1 2 3 4	rotation 1
+4 5 1 2 3	rotation 2
+3 4 5 1 2	rotation 3
+2 3 4 5 1	rotation 4
+1 2 3 4 5	rotation 5
+.		.
+.		.
+.		.
+
+-- Logic/Explanation: 
+This problem has several ways of going around it. You can put everything in a vector and just do it the old fashioned
+way (though inserting at the start of a vector is O(n), so you might want to take another data structure). Another 
+method is to simply rotate the list by hand using a head and (pre-)tail pointer. However, the approach me and my friend
+found was far more interesting.
+
+The first thing to establish is that this "rotation" operation makes an identical list after "n" rotations, where n is
+the size of the list. So we only really need to rotate "k % n" times. Now that we know that, we need to see into a type
+of linked list called the "circular linked list". 
+
+A circular linked list is a linked list in which the final NULL pointer is replaced by a pointer back to its head. This
+makes it such that traversing it will be infinite, and will lead to an output like:
+(if the list is {0,1,2})
+Output: 0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+
+This may seem useless in this problem, as we still need to return a singly linked list which isn't trivial to go back to
+from a circular list. However, if we know the original size of the list, and the location of the head, then we can always
+reconstruct the singly linked list. However, we will take advantage of the infinite nature of the circular list to obtain
+our answer through simple traversal. Take a look at the example below:
+
+LL = {0,1,2}, k = 1
+Answer: 2 0 1
+
+Now, imagine the LL as an circular linked list. It would be something like:
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+
+Now take 2 pointers, 1 head and 1 tail.
+
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+      ^   ^		
+
+Now, try moving this window we have back by k (i.e 1) nodes.
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+      ^   ^		
+	||
+	\/
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+    ^   ^		
+
+As you can see, we have gotten our answer! All we have to do is detach the next pointer from the tail pointer, and we 
+have our answer. But this operation requieres us to traverse backwards, which is not possible in a singly linked circular
+list. So instead, we can use the symmetric property of a circular linked list, and simply traverse forward "n - (k%n)" times!
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+      ^   ^		
+	||
+	\/
+0 1 2 0 1 2 0 1 2 0 1 2 0 1 2 ... ...
+          ^   ^		
+
+And there, we have our answer. So what we need to do is find the size of the linked list, make a tail pointer, and then traverse
+the head "n - (k%n)" times forward, and cut the next pointer and return node after head.
+
+
+Things to note: 
+In the code, we will have to traverse "n - (k%n) - 1" nodes forwards because the loop runs until the count is zero.
+
+-- Time complexity: O(n) time, O(1) space
+-- Code:
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (!head)
+            return head;
+        auto last = head;
+        //counting the size of the list, making it circular
+        int n = 0;
+        while (last->next) {
+            n++;
+            last = last->next;
+        }
+        n++;
+        last->next = head;
+        
+        // moving head n - (k % n) - 1 nodes forward
+        int c =  n - (k % n) - 1;
+        
+        while (c--) {
+            head = head->next;
+        }
+        last = head->next;
+        head->next = nullptr;
+        
+        return last;
+    }
+};
+
+-- Runtime: 5ms	
+-- Memory Usage: 11.7MB	
