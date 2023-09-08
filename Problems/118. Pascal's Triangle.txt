@@ -1,0 +1,38 @@
+-- Problem Name: "61. Rotate List" (https://leetcode.com/problems/rotate-list/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given n, return the first n rows of Pascal's triangle.
+
+-- Logic/Explanation: 
+We know that Pascal's triangle is constructed bottom up from an array of "1"s. All we do is add up 2 adjacent elements
+and put them in the "next" row. We do this continuously until we end up with a single element.
+
+Things to note: 
+This question is one of the most basic applications of DP.
+
+-- Time complexity: O(n) time, O(n^2) space
+-- Code:
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> res;
+        for (int i = 0; i < numRows; i++) {
+            vector<int> row;
+            row.push_back(1);
+            if (i == 0) {
+                res.push_back(row);
+                continue;
+            }
+            for (int j = 0; j < i-1 && i > 1; j++) {
+                row.push_back(res[i-1][j] + res[i-1][j+1]); 
+            }
+            row.push_back(1);
+            res.push_back(row);
+        }
+        return res;
+    }
+};
+
+-- Runtime: 0ms	
+-- Memory Usage: 8.5MB	
