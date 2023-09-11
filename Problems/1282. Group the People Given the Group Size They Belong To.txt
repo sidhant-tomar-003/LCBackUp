@@ -1,0 +1,62 @@
+-- Problem Name: "1282. Group the People Given the Group Size They Belong To" (https://leetcode.com/problems/group-the-people-given-the-group-size-they-belong-to/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given an array of size "n", each representing the "i"th person, and arr[i] storing the size of the group they should be
+in, return a valid grouping of the n people. i.e each person should be in a group of size arr[i].
+
+The test cases are made such that an answer is always reachable.
+
+-- Logic/Explanation: 
+In my solution, I followed this 3 step procedure to solve this problem:
+
+1. Find the number of people for each corresponding group size and count them up
+2. Make the corresponding number of groups to fit the people in. Put pointers to these groups in a hashmap
+3. Run through the list of people and put them in their corresponding groups, while removing groups that are
+	"full" from the hashmap.
+
+Things to note: 
+My approach is a bit inefficient. You can skip the second step and go straight to the third by simply making and filling the 
+group for a corresponding group size at the same time.
+
+-- Time complexity: O(n) time, O(n) space
+-- Code:
+class Solution {
+public:
+    vector<vector<int>> groupThePeople(vector<int>& gs) {
+        vector<vector<int>> res;
+        unordered_map<int, vector<int>> mp; // stores index+1, size
+        
+        // Count up the number of people
+        for (int i = 0; i < gs.size(); i++) {
+            if (mp[gs[i]].size() == 0) 
+                mp[gs[i]].push_back(0);
+            
+            mp[gs[i]][0]++;
+        }
+        // make the empty groups according to the counts of people and
+        // their required group sizes
+        int pointer = 0;
+        for (auto group: mp) {
+            int gsize = group.first, amt = group.second[0];
+            mp[gsize] = {};
+            for (int i = 0; i < amt/gsize; i++) {
+                res.push_back({});
+                mp[gsize].push_back(pointer);   // track the groups with mp
+                pointer++;
+            }
+        }
+        
+        // fill in the groups sequentially with mp
+        for (int i = 0; i < gs.size(); i++) {
+            int pos = mp[gs[i]][0];
+            res[pos].push_back(i);
+            if (res[pos].size() == gs[i])
+                mp[gs[i]].erase(mp[gs[i]].begin());
+            
+        }
+        return res;
+    }
+};
+-- Runtime: 8ms	
+-- Memory Usage: 13MB	
