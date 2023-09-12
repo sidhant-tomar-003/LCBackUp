@@ -1,0 +1,102 @@
+-- Problem Name: "1647. Minimum Deletions to Make Character Frequencies Unique" (https://leetcode.com/problems/minimum-deletions-to-make-character-frequencies-unique/)
+-- Difficulty: Medium
+-- Language: C++
+-- Problem statement (condensed):
+Given a string, delete a minimal amount of characters until the occurance/count of each letter is unique and return the number
+of deletions.
+
+-- Logic/Explanation: 
+This question is quite simple if you understand that you can count up the occurances more than once!
+
+So we can find the counts of all the letters. Then we run another hashmap to count the various counts of letters, and 
+store them. Once we've done that, we simply iterate through all the non-zero counts greater than one and make them unique 
+with the operation of:
+	- int temp = count - 1;
+	- count -= temp;
+	- count_of_one_less += temp;
+	- deletions += temp;
+
+Note that when the count of a count is greater than 1, our condition is violated. So we have to delete until its value
+is 1 (hence deleting count - 1 amounts), and putting the adjusted counts to "count_of_one_less". This is better shown
+with an example:
+
+Eg: s = "aaabbbcccd"
+counts = a: 3, b: 3, c: 3, d: 1 		(and a bunch of 0s for the rest)
+count_of_counts = 3: 3, 1: 1	
+		     ^
+		This is greater than 1, so there are non-unique number of occurences
+
+do: 
+-int temp = count_of_counts[3] - 1
+-count_of_counts[3] -= temp
+-count_of_counts[2] += temp
+-deletions += temp
+
+now:
+count_of_counts = 3: 1, 2: 2, 1: 1
+
+do:
+-int temp = count_of_counts[2] - 1
+-count_of_counts[2] -= temp
+-count_of_counts[1] += temp
+-deletions += temp
+
+now:
+count_of_counts = 3: 1, 2: 1, 1: 2
+
+do:
+-int temp = count_of_counts[1] - 1
+-count_of_counts[1] -= temp
+-count_of_counts[0] += temp
+-deletions += temp
+
+now:
+count_of_counts = 3: 1, 2: 1, 1: 1, 0: 0
+
+Note that 0 can occur any number of times, as we don't check for it.
+
+And thats it! We've made the number of occurances unique. So a lexographically small string for this count_of_counts 
+would be:
+	s = "aaabbc"
+
+
+
+Things to note: 
+My approach is a bit inefficient. You can skip the second step and go straight to the third by simply making and filling the 
+group for a corresponding group size at the same time.
+
+-- Time complexity: O(n) time, O(n) space
+-- Code:
+class Solution {
+public:
+    int minDeletions(string s) {
+        int occ[26] = {0};
+        for (auto i: s)
+            occ[i-'a']++;
+        
+        unordered_map<int,int> mp;
+        for (int i = 0; i < 26; i++)
+            mp[occ[i]]++;
+        
+        int res = 0, f = 1;
+        while (f) {
+            f = 0;
+            for (auto count: mp) {
+                if (count.second == 0 || count.first == 0)
+                    continue;
+                    
+                if (count.second > 1) {
+                    f = 1;
+                    int temp = count.second - 1;
+                    mp[count.first] -= temp;
+                    mp[count.first-1] += temp;
+                    res += temp;
+                }
+            }
+        }
+        return res;
+    }
+};
+
+-- Runtime: 37ms	
+-- Memory Usage: 17.3MB	
