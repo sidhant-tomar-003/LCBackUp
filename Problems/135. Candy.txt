@@ -2,53 +2,63 @@
 -- Difficulty: Hard
 -- Language: C++
 -- Problem statement (condensed):
-Given an array of "ratings" of children, you need to return an array of integers back which counts the amount of candy
-the 'ith' child gets. The candy is distributed according to these rules:
+Given an array of "ratings" of children, you need to return the minimum amount of candy needed for all the children give the following 
+conditions:
 
     -Each child must have at least one candy.
     -Children with a higher rating get more candies than their neighbors.
 
+We can do this by making a vector of length "ratings", and have the ith value correspond to the amount of candy they would be getting.
+Then we can return the sum of this array.
+
 
 -- Logic/Explanation: 
 This question is quite simple once you understand the fact that the operation described in the problem is directional.
-So, we can simply do the operation of FINISH THIS SIAOIOIASJDOIASJDOIJDOIQWJDOIJDOIQJWDO
+So, we can simply do the operation of maintaining the second condition by checking if a child has a higher rating than
+the one before it (i.e to its left). If the child does have a higher rating, we give it the previous child's candy count + 1.
+
+Then, we can repeat the same operation from right to left. This will yield us a final array with almost the correct amount of
+candy for each child. I say "almost correct" because this approach leaves an edge case: The case in which a child has a higher 
+rating than both of its neighbours, and the neighbours have differing amounts of candy. In this case, the child will be rewarded
+with both its left neighbour's candy + 1 and right neighbour's candy + 1 candy, which violates the "minimum amount of candy" condition
+in our problem statement. 
+
+To resolve the case above, we can simply "flatten" the child with the highest rating to max(left, right) + 1. And that will yield us 
+the correct answer!
 
 Things to note: 
-My approach is a bit inefficient. You can skip the second step and go straight to the third by simply making and filling the 
-group for a corresponding group size at the same time.
+There is a mathematical approach to this that is done in 1 pass. It involves counting the number of increasing ratings and decreasing
+ratings. You can find details on this in the leetcode discuss section.
 
 -- Time complexity: O(n) time, O(n) space
 -- Code:
 class Solution {
 public:
-    int minDeletions(string s) {
-        int occ[26] = {0};
-        for (auto i: s)
-            occ[i-'a']++;
-        
-        unordered_map<int,int> mp;
-        for (int i = 0; i < 26; i++)
-            mp[occ[i]]++;
-        
-        int res = 0, f = 1;
-        while (f) {
-            f = 0;
-            for (auto count: mp) {
-                if (count.second == 0 || count.first == 0)
-                    continue;
-                    
-                if (count.second > 1) {
-                    f = 1;
-                    int temp = count.second - 1;
-                    mp[count.first] -= temp;
-                    mp[count.first-1] += temp;
-                    res += temp;
-                }
-            }
+    int candy(vector<int>& ratings) {
+        vector<int> res(ratings.size(), 1);
+        int n = ratings.size();
+        for (int i = 1; i < n; i++) {
+            if (ratings[i] > ratings[i-1])
+                res[i] += res[i-1];
         }
-        return res;
+        
+        for (int i = 1; i < n; i++) {
+            if (ratings[n - i - 1] > ratings[n - i])
+                res[n - i - 1] += res[n - i];
+        }
+        
+        for (int i = 1; i < n-1; i++) {
+            if (res[i] - res[i-1] > 1 && res[i] - res[i+1] > 1)
+                res[i] = max (res[i-1],res[i+1]) + 1;
+        }
+        
+        int s = 0;
+        for (auto i: res) {
+            s += i;
+      
+        return s;
     }
 };
 
--- Runtime: 37ms	
--- Memory Usage: 17.3MB	
+-- Runtime: 15ms	
+-- Memory Usage: 17.8MB	

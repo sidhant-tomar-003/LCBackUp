@@ -1,0 +1,65 @@
+-- Problem Name: "332. Reconstruct Itinerary" (https://leetcode.com/problems/reconstruct-itinerary/)
+-- Difficulty: Hard
+-- Language: C++
+-- Problem statement (condensed):
+We are given a vector of tickets in the form of pairs of strings. Each pair is of the form:
+	-> [from, to]
+
+With this information, return the lexicographically smallest itinerary.
+
+I.e, return the Eulerian Circuit of the graph formed by the tickets if a from, to makes a single directed edge.
+It can be assumed that each input has at least 1 valid Eulerian Circuit.
+
+-- Logic/Explanation: 
+I solved this problem in 3 simple steps:
+1. Make a graph of the edges provided, using an unordered_map<string, vector<string>>
+2. Sort all of the connection vectors to be in a descending lexicograhic order
+3. Perform a dfs from the right of the vector to the left.
+
+Things to note: 
+We can only do this if we're assured that the input graph actually has a Eulerian circuit. Otherwise, we'd need
+to check when we're performing the dfs to not get stuck.
+
+-- Time complexity: O(n) time, O(n) space
+-- Code:
+class Solution {
+public: 
+    int n = 0;
+    bool dfs(unordered_map<string, vector<string>>& mp, vector<string>& res, string curr, vector<string>& path) {
+        path.push_back(curr);
+        if (!mp[curr].size() && path.size() == n) {
+            res = path;
+            return 1;
+        }
+        
+        for (int i = mp[curr].size() - 1; i >= 0; i--) {
+            auto temp = mp[curr][i];
+            mp[curr].erase(mp[curr].begin() + i);
+            if (dfs(mp, res, temp, path))
+                return 1;
+            
+            mp[curr].insert(mp[curr].begin() + i, temp);
+        }
+        path.pop_back();
+        return 0;
+    }
+    
+    
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        unordered_map<string, vector<string>> mp;
+        n = tickets.size()+1;
+        for (auto s: tickets) {
+            mp[s[0]].push_back(s[1]);
+        }
+        for (auto& node: mp)   // TIL there's a big difference in auto x and auto& x. Assuming auto& x was implicit proves how pythonic my brain is lol
+            sort(node.second.begin(),node.second.end(), greater<string>());
+        
+        vector<string> res, path;
+        dfs(mp, res, "JFK", path);
+        
+        return res;
+    }
+};
+
+-- Runtime: 17ms	
+-- Memory Usage: 15.7MB	
